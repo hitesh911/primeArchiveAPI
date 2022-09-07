@@ -103,7 +103,7 @@ App.post("/savePayment",async(req,res)=>{
 		return res.json({"status":false,"discreption":"Your request method is wrong read docs"})
 	}
 })
-// checkApi checks takes email and device id as body parameter and set device id according to email 
+// checkApi checks takes email and device id as body parameter and set device id according to email basically this should called every time when use login to the app
 App.post("/checkApi",async(req ,res)=>{
 	try {
 		data = req.body
@@ -111,7 +111,7 @@ App.post("/checkApi",async(req ,res)=>{
 		if(!existance){
 			return res.json({"stauts":0 , "discreption":"user is not primuim"})
 		}else{
-			if(existance.deviceID.trim().lenght === 0 || existance.deviceID == data.deviceID){
+			if(existance.deviceID == "" || existance.deviceID == data.deviceID){
 					newPrimeUser.updateOne({_id:existance._id},{"deviceID":data.deviceID},(err,data)=>{
 						if(!err){
 							console.log(`Device id is set for ${existance.email}`)
