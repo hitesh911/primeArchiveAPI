@@ -104,12 +104,13 @@ App.post("/savePayment",async(req,res)=>{
 	}
 })
 // checkApi checks takes email and device id as body parameter and set device id according to email basically this should called every time when use login to the app
+// parameters email , deviceID
 App.post("/checkApi",async(req ,res)=>{
 	try {
 		data = req.body
 		existance = await newPrimeUser.findOne({"email":data.email}).exec()
 		if(!existance){
-			return res.json({"stauts":0 , "discreption":"user is not primuim"})
+			return res.json({"status":0 , "discreption":"user is not primuim"})
 		}else{
 			if(existance.deviceID == "" || existance.deviceID == data.deviceID){
 					newPrimeUser.updateOne({_id:existance._id},{"deviceID":data.deviceID},(err,data)=>{
@@ -135,34 +136,42 @@ App.post("/checkApi",async(req ,res)=>{
 
 })
 // logout method takes key as parameter and take email as query and then remove deviceID from that account 
-App.get("/logout/:key",async(req,res)=>{
-	data = req.query
-	if(req.params.key === auth.key){
-		existance = await newPrimeUser.findOne({"email":data.email}).exec()
-		if(!existance){
-			return res.json({"status":false,"descreption":`No premium account found with ${data.email}`})
-		}else{
-			if(existance.deviceID.trim().length === 0){
-				return res.json({"status":false,"descreption":`${data.email} address is not logged in any device please login first `})	
-			}else{
-				if(existance.deviceID == data.deviceID){
-					newPrimeUser.updateOne({_id:existance._id},{"deviceID":""},(err,data)=>{
-							if(!err){
-								console.log(`Device logout success for ${existance.email}`)
-								return res.json({"status":true , "discreption": "device is logged out successFully"})
-							}else{
-								console.log(`Database error to logout deviceID for ${existance.email} address`)
-								return res.json({"status":false,"discreption":"Database error to logout deviceID"})
-							}
-						})
-				}else{
-					res.json({"status":false,"discreption":"Your device id is not as same as in database"})
-				}
 
+// parameters are   email ,deviceID
+App.get("/logout/:key",async(req,res)=>{
+	try {
+		data = req.query
+		if(req.params.key === auth.key){
+			existance = await newPrimeUser.findOne({"email":data.email}).exec()
+			if(!existance){
+				return res.json({"status":false,"descreption":`No premium account found with ${data.email}`})
+			}else{
+				if(existance.deviceID.trim().length === 0){
+					return res.json({"status":false,"descreption":`${data.email} address is not logged in any device please login first `})	
+				}else{
+					if(existance.deviceID == data.deviceID){
+						newPrimeUser.updateOne({_id:existance._id},{"deviceID":""},(err,data)=>{
+								if(!err){
+									console.log(`Device logout success for ${existance.email}`)
+									return res.json({"status":true , "discreption": "device is logged out successFully"})
+								}else{
+									console.log(`Database error to logout deviceID for ${existance.email} address`)
+									return res.json({"status":false,"discreption":"Database error to logout deviceID"})
+								}
+							})
+					}else{
+						res.json({"status":false,"discreption":"Your device id is not as same as in database"})
+					}
+
+				}
 			}
+		}else{
+			res.json({"status":false,"discreption":"Yout can't access api without key"})
 		}
-	}else{
-		res.json({"status":false,"discreption":"Yout can't access api without key"})
+	}catch(e) {
+		console.log(e);
+		res.json({"status":false,"discreption":"Some error happen you are requesting it right "})
+
 	}
 
 })
