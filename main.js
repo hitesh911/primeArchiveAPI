@@ -115,7 +115,7 @@ App.post("/checkApi",async(req ,res)=>{
 			if(existance.deviceID == "" || existance.deviceID == data.deviceID){
 					newPrimeUser.updateOne({_id:existance._id},{"deviceID":data.deviceID},(err,data)=>{
 						if(!err){
-							console.log(`Device id is set for ${existance.email}`)
+							console.log(`User ${existance.email} is logged in`)
 							return res.json({"status":1 , "discreption": "device id is added successFully or same as previously"})
 						}else{
 							console.log(`Database error to update deviceID for ${existance.email} address`)
@@ -124,7 +124,7 @@ App.post("/checkApi",async(req ,res)=>{
 					})
 			}else{
 				console.log(`DeviceId already exists which is different for ${existance.email}`)
-				return res.json({"status":2,"descreption":`DeviceId already exists which is different for ${existance.email}`})
+				return res.json({"status":2,"discreption":`DeviceId already exists which is different for ${existance.email}`})
 			}
 		}
 
@@ -140,14 +140,15 @@ App.post("/checkApi",async(req ,res)=>{
 // parameters are   email ,deviceID
 App.get("/logout/:key",async(req,res)=>{
 	try {
-		data = req.query
+		data = req.headers
+		data.deviceID = data.deviceid
 		if(req.params.key === auth.key){
 			existance = await newPrimeUser.findOne({"email":data.email}).exec()
 			if(!existance){
-				return res.json({"status":false,"descreption":`No premium account found with ${data.email}`})
+				return res.json({"status":false,"discreption":`No premium account found with ${data.email}`})
 			}else{
 				if(existance.deviceID.trim().length === 0){
-					return res.json({"status":false,"descreption":`${data.email} address is not logged in any device please login first `})	
+					return res.json({"status":false,"discreption":`${data.email} address is not logged in any device please login first `})	
 				}else{
 					if(existance.deviceID == data.deviceID){
 						newPrimeUser.updateOne({_id:existance._id},{"deviceID":""},(err,data)=>{
@@ -160,17 +161,17 @@ App.get("/logout/:key",async(req,res)=>{
 								}
 							})
 					}else{
-						res.json({"status":false,"discreption":"Your device id is not as same as in database"})
+						return res.json({"status":false,"discreption":"Your device id is not as same as in database"})
 					}
 
 				}
 			}
 		}else{
-			res.json({"status":false,"discreption":"Yout can't access api without key"})
+			return res.json({"status":false,"discreption":"Yout can't access api without key"})
 		}
 	}catch(e) {
 		console.log(e);
-		res.json({"status":false,"discreption":"Some error happen you are requesting it right "})
+		return res.json({"status":false,"discreption":"Some error happen you are requesting it right "})
 
 	}
 
@@ -233,7 +234,7 @@ App.post('/create/:key', async (req, res) => {
 
 			}
 		}else{
-			return res.json({"status":false,"descreption":"you must pass key as a parameter"})
+			return res.json({"status":false,"discreption":"you must pass key as a parameter"})
 		}
 	} catch(e) {
 		
@@ -244,84 +245,105 @@ App.post('/create/:key', async (req, res) => {
 })
 // reading posts 
 App.get('/read/:key',async(req,res)=>{
-	const data = req.query
-	var contentList = []
-	if(data.id){
-			newMoviePost.findById(data.id,(err,doc)=>{
-				if(!err){
-					return res.json({"status":true,"data":doc})
+	try {
+		// getting headers 
+		const headers = req.headers            //for email and deviceID
+		headers.deviceID = headers.deviceid                       
+		const data = req.query
+		var contentList = []
+		// if both email and deviceID is given in headers 
+		if(headers.email && headers.deviceID){
+			// checking existance of user 
+			existance = await newPrimeUser.findOne({"email":headers.email}).exec()
+			if(existance && existance.deviceID == headers.deviceID){
+				if(data.id){
+						newMoviePost.findById(data.id,(err,doc)=>{
+							if(!err){
+								return res.json({"status":true,"data":doc})
+							}else{
+								console.log(err)
+								return res.json({"status":false,"discreption":"No id found. But you can still contact JUFFLER"})
+
+							}
+						})
 				}else{
-					console.log(err)
-					return res.json({"status":false,"discreption":"No id found. But you can still contact JUFFLER"})
+						if(data.isSeries == true){
+								// -----------------------------------------including Series ---------------------------
+							// getting data from various parameters 
+							if(data.type){
+								// if data.type is like this {"type":["anime","jumanju"]}
+								if(data.type instanceof Array){
+									const dataFromTypeAndName = await newMoviePost.find({"type":data.type[0],"name":{"$regex":data.type[1],"$options":"i"}}).sort({releaseDate: 'descending'}).exec()
+									contentList = contentList.concat(JSON.parse(JSON.stringify(dataFromTypeAndName)))	
+								}else{
+									const dataFromType = await newMoviePost.find({"type":data.type}).sort({releaseDate: 'descending'}).exec()
+									contentList = contentList.concat(JSON.parse(JSON.stringify(dataFromType)))
+								}
+							}
+							if(data.name){
+								const dataFromName = await newMoviePost.find({"name":{"$regex":data.name,"$options":"i"}}).sort({releaseDate: 'descending'}).exec()
+								contentList = contentList.concat(JSON.parse(JSON.stringify(dataFromName)))
+							}
+							// if no filter seach is not used so adding all data 
+							if(!data.type && !data.name && !data.id){
+								// else reading all posts 
+								const allData = await newMoviePost.find().sort({releaseDate: 'descending'}).exec()
+								contentList = contentList.concat(JSON.parse(JSON.stringify(allData)))
+							}
+						}else{
+							// --------------------excluding series ---------------------------
+							// getting data from various parameters 
+							if(data.type){
+								// if data.type is like this {"type":["anime","jumanju"]}
+								if(data.type instanceof Array){
+									const dataFromTypeAndName = await newMoviePost.find({"isSeries":false,"type":data.type[0],"name":{"$regex":data.type[1],"$options":"i"}}).sort({releaseDate: 'descending'}).exec()
+									contentList = contentList.concat(JSON.parse(JSON.stringify(dataFromTypeAndName)))	
+								}else{
+									const dataFromType = await newMoviePost.find({"isSeries":false,"type":data.type}).sort({releaseDate: 'descending'}).exec()
+									contentList = contentList.concat(JSON.parse(JSON.stringify(dataFromType)))
+								}
+							}
+							if(data.name){
+								const dataFromName = await newMoviePost.find({"isSeries":false,"name":{"$regex":data.name,"$options":"i"}}).sort({releaseDate: 'descending'}).exec()
+								contentList = contentList.concat(JSON.parse(JSON.stringify(dataFromName)))
+							}
+							// if no filter seach is not used so adding all data 
+							if(!data.type && !data.name ){
+								// else reading all posts 
+								const allData = await newMoviePost.find({"isSeries":false}).sort({releaseDate: 'descending'}).exec()
+								contentList = contentList.concat(JSON.parse(JSON.stringify(allData)))
+							}
+						}
+					
+						// removing duplicates from contentList
+						const uniqueIds = []
+						const filteredContentList = contentList.filter(element=>{
+							const isDuplicated = uniqueIds.includes(element._id)
+							if(!isDuplicated){
+								uniqueIds.push(element._id)
+								return true
+							}
+							return false
+						})
 
-				}
-			})
-	}else{
-			if(data.isSeries == true){
-					// -----------------------------------------including Series ---------------------------
-				// getting data from various parameters 
-				if(data.type){
-					// if data.type is like this {"type":["anime","jumanju"]}
-					if(data.type instanceof Array){
-						const dataFromTypeAndName = await newMoviePost.find({"type":data.type[0],"name":{"$regex":data.type[1],"$options":"i"}}).sort({releaseDate: 'descending'}).exec()
-						contentList = contentList.concat(JSON.parse(JSON.stringify(dataFromTypeAndName)))	
-					}else{
-						const dataFromType = await newMoviePost.find({"type":data.type}).sort({releaseDate: 'descending'}).exec()
-						contentList = contentList.concat(JSON.parse(JSON.stringify(dataFromType)))
-					}
-				}
-				if(data.name){
-					const dataFromName = await newMoviePost.find({"name":{"$regex":data.name,"$options":"i"}}).sort({releaseDate: 'descending'}).exec()
-					contentList = contentList.concat(JSON.parse(JSON.stringify(dataFromName)))
-				}
-				// if no filter seach is not used so adding all data 
-				if(!data.type && !data.name && !data.id){
-					// else reading all posts 
-					const allData = await newMoviePost.find().sort({releaseDate: 'descending'}).exec()
-					contentList = contentList.concat(JSON.parse(JSON.stringify(allData)))
+						// checking if we get any data 
+						if(filteredContentList.length === 0){
+							return res.json({"status":false,"discreption":"NO results found for your search Query. May be your database is empty Try make request with no filter parameters"})
+						}else{
+							return res.json({"stauts":true,"data":filteredContentList ,"size": filteredContentList.length})
+						}
 				}
 			}else{
-				// --------------------excluding series ---------------------------
-				// getting data from various parameters 
-				if(data.type){
-					// if data.type is like this {"type":["anime","jumanju"]}
-					if(data.type instanceof Array){
-						const dataFromTypeAndName = await newMoviePost.find({"isSeries":false,"type":data.type[0],"name":{"$regex":data.type[1],"$options":"i"}}).sort({releaseDate: 'descending'}).exec()
-						contentList = contentList.concat(JSON.parse(JSON.stringify(dataFromTypeAndName)))	
-					}else{
-						const dataFromType = await newMoviePost.find({"isSeries":false,"type":data.type}).sort({releaseDate: 'descending'}).exec()
-						contentList = contentList.concat(JSON.parse(JSON.stringify(dataFromType)))
-					}
-				}
-				if(data.name){
-					const dataFromName = await newMoviePost.find({"isSeries":false,"name":{"$regex":data.name,"$options":"i"}}).sort({releaseDate: 'descending'}).exec()
-					contentList = contentList.concat(JSON.parse(JSON.stringify(dataFromName)))
-				}
-				// if no filter seach is not used so adding all data 
-				if(!data.type && !data.name ){
-					// else reading all posts 
-					const allData = await newMoviePost.find({"isSeries":false}).sort({releaseDate: 'descending'}).exec()
-					contentList = contentList.concat(JSON.parse(JSON.stringify(allData)))
-				}
+				return res.json({"status":false,"discreption":"your provided email and deviceid combination not found in database"})	
 			}
-		
-			// removing duplicates from contentList
-			const uniqueIds = []
-			const filteredContentList = contentList.filter(element=>{
-				const isDuplicated = uniqueIds.includes(element._id)
-				if(!isDuplicated){
-					uniqueIds.push(element._id)
-					return true
-				}
-				return false
-			})
+		}else{
+			return res.json({"status":false,"discreption":"you have to pass email and deviceID to read movies data"})
+		}
+	} catch(e) {
+		// statements
+		console.log(e);
+		return res.json({"status":false,"discreption":"Some error with Api contact JUFFLER"})
 
-			// checking if we get any data 
-			if(filteredContentList.length === 0){
-				return res.json({"status":false,"discreption":"NO results found for your search Query. May be your database is empty Try make request with no filter parameters"})
-			}else{
-				return res.json({"stauts":true,"data":filteredContentList ,"size": filteredContentList.length})
-			}
 	}
 })
 App.put("/update/:key", async(req,res)=>{
@@ -338,10 +360,10 @@ App.put("/update/:key", async(req,res)=>{
 					return res.json({"status":false,"discreption":`field  is ${data.fields}. Please provide some fields to update e.g {"name":"Some new name"}`})
 				}
 			}else{
-				return res.json({"stauts":false,"descreption":"you must pass Id to update in body (data)"})	
+				return res.json({"stauts":false,"discreption":"you must pass Id to update in body (data)"})	
 			}
 		}else{
-			return res.json({"stauts":false,"descreption":"you must pass key as a parameter"})
+			return res.json({"stauts":false,"discreption":"you must pass key as a parameter"})
 		}
 	} catch(e) {
 		// statements
@@ -363,10 +385,10 @@ App.delete('/deleteOne/:key', async(req,res)=>{
 						}
 					})
 			}else{
-				return res.json({"stauts":false,"descreption":"you must pass Id to delete for in body (data)"})	
+				return res.json({"stauts":false,"discreption":"you must pass Id to delete for in body (data)"})	
 			}
 		}else{
-			return res.json({"stauts":false,"descreption":"you must pass key as a parameter"})
+			return res.json({"stauts":false,"discreption":"you must pass key as a parameter"})
 		}
 	} catch(e) {
 		// statements
@@ -380,14 +402,14 @@ App.delete('/deleteAll/:key', async (req, res) => {
 		if(req.params.key === auth.key){
 		  	newMoviePost.deleteMany({},(err, doc)=>{
 		  	if(!err){
-		  		return res.json({"stauts":true,"descreption":"all posts deleted successFully"})
+		  		return res.json({"stauts":true,"discreption":"all posts deleted successFully"})
 		  	}else{
 		  		console.log(`this is error ${err}`)
-		  		return res.json({"stauts":false,"descreption":"Database error while deleating all posts"})
+		  		return res.json({"stauts":false,"discreption":"Database error while deleating all posts"})
 		  	}
 		  })
 		}else{
-			return res.json({"stauts":false,"descreption":"you must pass key as a parameter"})
+			return res.json({"stauts":false,"discreption":"you must pass key as a parameter"})
 		}
 	} catch(e) {
 		console.log(e);
