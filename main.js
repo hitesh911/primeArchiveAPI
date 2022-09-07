@@ -36,7 +36,8 @@ const moviePost =  new Schema({
 	releaseDate:{type:Date,default:Date.now},
 	next:String,
 	previous:String,
-	isSeries:{type:Boolean,default:false}
+	isSeries:{type:Boolean,default:false},
+	skip:{type:[String],default:[]}
 })
 // submitting schema into modal of posts collection of moviesPost database
 const newMoviePost = mongoose.model('post', moviePost);
@@ -188,7 +189,8 @@ App.post('/create/:key', async (req, res) => {
 			  	movieID:data.movieID,
 			  	next:data.next,
 			  	previous:data.previous,
-			  	isSeries:data.isSeries
+			  	isSeries:data.isSeries,
+			  	skip:data.skip
 			  })
 				newPost.save((err, doc)=>{
 				  	if(!err){
@@ -208,7 +210,8 @@ App.post('/create/:key', async (req, res) => {
 			  	movieID:data.movieID,
 			  	next:data.next,
 			  	previous:data.previous,
-			  	isSeries:data.isSeries
+			  	isSeries:data.isSeries,
+			  	skip:data.skip
 			  })
 				newPost.save((err, doc)=>{
 				  	if(!err){
@@ -233,7 +236,6 @@ App.post('/create/:key', async (req, res) => {
 // reading posts 
 App.get('/read/:key',async(req,res)=>{
 	const data = req.query
-	console.log(data.isSeries)
 	var contentList = []
 	if(data.id){
 			newMoviePost.findById(data.id,(err,doc)=>{
@@ -267,7 +269,6 @@ App.get('/read/:key',async(req,res)=>{
 				if(!data.type && !data.name && !data.id){
 					// else reading all posts 
 					const allData = await newMoviePost.find().sort({releaseDate: 'descending'}).exec()
-					console.log(allData)
 					contentList = contentList.concat(JSON.parse(JSON.stringify(allData)))
 				}
 			}else{
