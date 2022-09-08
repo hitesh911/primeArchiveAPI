@@ -138,10 +138,9 @@ App.post("/checkApi",async(req ,res)=>{
 // logout method takes key as parameter and take email as query and then remove deviceID from that account 
 
 // parameters are   email ,deviceID
-App.get("/logout/:key",async(req,res)=>{
+App.post("/logout/:key",async(req,res)=>{
 	try {
-		data = req.headers
-		data.deviceID = data.deviceid
+		data = req.body
 		if(req.params.key === auth.key){
 			existance = await newPrimeUser.findOne({"email":data.email}).exec()
 			if(!existance){
@@ -244,18 +243,17 @@ App.post('/create/:key', async (req, res) => {
   
 })
 // reading posts 
-App.get('/read/:key',async(req,res)=>{
+App.post('/read/:key',async(req,res)=>{
 	try {
 		// getting headers 
-		const headers = req.headers            //for email and deviceID
-		headers.deviceID = headers.deviceid                       
-		const data = req.query
+		const data = req.body
 		var contentList = []
+		console.log("data",data)
 		// if both email and deviceID is given in headers 
-		if(headers.email && headers.deviceID){
+		if(data.email && data.deviceID){
 			// checking existance of user 
-			existance = await newPrimeUser.findOne({"email":headers.email}).exec()
-			if(existance && existance.deviceID == headers.deviceID){
+			existance = await newPrimeUser.findOne({"email":data.email}).exec()
+			if(existance && existance.deviceID == data.deviceID){
 				if(data.id){
 						newMoviePost.findById(data.id,(err,doc)=>{
 							if(!err){
@@ -311,6 +309,7 @@ App.get('/read/:key',async(req,res)=>{
 							if(!data.type && !data.name ){
 								// else reading all posts 
 								const allData = await newMoviePost.find({"isSeries":false}).sort({releaseDate: 'descending'}).exec()
+								console.log("giving all data")
 								contentList = contentList.concat(JSON.parse(JSON.stringify(allData)))
 							}
 						}
@@ -327,7 +326,7 @@ App.get('/read/:key',async(req,res)=>{
 						})
 
 						// checking if we get any data 
-						if(filteredContentList.length === 0){
+						if(filteredContentList.length == 0){
 							return res.json({"status":false,"discreption":"NO results found for your search Query. May be your database is empty Try make request with no filter parameters"})
 						}else{
 							return res.json({"stauts":true,"data":filteredContentList ,"size": filteredContentList.length})
