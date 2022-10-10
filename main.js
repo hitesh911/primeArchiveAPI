@@ -203,7 +203,7 @@ App.post('/create/:key', async (req, res) => {
 			  })
 				newPost.save((err, doc)=>{
 				  	if(!err){
-				  		return res.json({"stauts":true,"discreption":`Movie post successFully saved  with ${doc} details `})
+				  		return res.json({"status":true,"discreption":`Movie post successFully saved  with ${doc} details `})
 				  	}else{
 				  		console.log(`Error while saving movie post  ${err}`)
 				  		return res.json({"status":false,"discreption":`ERROR whiles saving : ${err}`})
@@ -224,7 +224,7 @@ App.post('/create/:key', async (req, res) => {
 			  })
 				newPost.save((err, doc)=>{
 				  	if(!err){
-				  		return res.json({"stauts":true,"discreption":`Movie post successFully saved  with ${doc} details `})
+				  		return res.json({"status":true,"discreption":`Movie post successFully saved  with ${doc} details `})
 				  	}else{
 				  		console.log(`Error while saving movie post  ${err}`)
 				  		return res.json({"status":false,"discreption":`ERROR whiles saving : ${err}`})
@@ -329,7 +329,7 @@ App.post('/read/:key',async(req,res)=>{
 						if(filteredContentList.length == 0){
 							return res.json({"status":false,"discreption":"NO results found for your search Query. May be your database is empty Try make request with no filter parameters"})
 						}else{
-							return res.json({"stauts":true,"data":filteredContentList ,"size": filteredContentList.length})
+							return res.json({"status":true,"data":filteredContentList ,"size": filteredContentList.length})
 						}
 				}
 			}else{
@@ -359,10 +359,10 @@ App.put("/update/:key", async(req,res)=>{
 					return res.json({"status":false,"discreption":`field  is ${data.fields}. Please provide some fields to update e.g {"name":"Some new name"}`})
 				}
 			}else{
-				return res.json({"stauts":false,"discreption":"you must pass Id to update in body (data)"})	
+				return res.json({"status":false,"discreption":"you must pass Id to update in body (data)"})	
 			}
 		}else{
-			return res.json({"stauts":false,"discreption":"you must pass key as a parameter"})
+			return res.json({"status":false,"discreption":"you must pass key as a parameter"})
 		}
 	} catch(e) {
 		// statements
@@ -384,10 +384,10 @@ App.delete('/deleteOne/:key', async(req,res)=>{
 						}
 					})
 			}else{
-				return res.json({"stauts":false,"discreption":"you must pass Id to delete for in body (data)"})	
+				return res.json({"status":false,"discreption":"you must pass Id to delete for in body (data)"})	
 			}
 		}else{
-			return res.json({"stauts":false,"discreption":"you must pass key as a parameter"})
+			return res.json({"status":false,"discreption":"you must pass key as a parameter"})
 		}
 	} catch(e) {
 		// statements
@@ -401,14 +401,14 @@ App.delete('/deleteAll/:key', async (req, res) => {
 		if(req.params.key === auth.key){
 		  	newMoviePost.deleteMany({},(err, doc)=>{
 		  	if(!err){
-		  		return res.json({"stauts":true,"discreption":"all posts deleted successFully"})
+		  		return res.json({"status":true,"discreption":"all posts deleted successFully"})
 		  	}else{
 		  		console.log(`this is error ${err}`)
-		  		return res.json({"stauts":false,"discreption":"Database error while deleating all posts"})
+		  		return res.json({"status":false,"discreption":"Database error while deleating all posts"})
 		  	}
 		  })
 		}else{
-			return res.json({"stauts":false,"discreption":"you must pass key as a parameter"})
+			return res.json({"status":false,"discreption":"you must pass key as a parameter"})
 		}
 	} catch(e) {
 		console.log(e);
