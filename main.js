@@ -58,6 +58,7 @@ const newPrimeUser = mongoose.model('user', primeUser);
 
 
 //------------------------- primeUser API Routs webhook----------------------------------
+// create user and save payment is same 
 App.post("/savePayment",async(req,res)=>{
 	try {
 		data = req.body
@@ -95,6 +96,28 @@ App.post("/savePayment",async(req,res)=>{
 		}else{
 			console.log(`Status for ${data.email} is ${data.status}`)
 			return res.json({"status":false})
+		}
+	
+	} catch(e) {
+		// statements
+		console.log(e);
+		return res.json({"status":false,"discreption":"Your request method is wrong read docs"})
+	}
+})
+
+// read users  
+App.post("/readUser/:key",async(req,res)=>{
+	try {
+		if(req.params.key === auth.key){
+			data = req.body
+			existance = await newPrimeUser.findOne({"email":data.email}).exec()
+			if(!existance){
+				return res.json({"status":false,"discreption":"use with email does not exists"})
+			}else{
+				return res.json({"status":true ,"data":existance})
+			}	
+		}else{
+			return res.json({"status":false ,"discreption":"your auth key is wrong "})
 		}
 	
 	} catch(e) {
