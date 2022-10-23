@@ -38,7 +38,8 @@ const moviePost =  new Schema({
 	next:String,
 	previous:String,
 	isSeries:{type:Boolean,default:false},
-	skip:{type:[String],default:[]}
+	skip:{type:[String],default:[]},
+	owner:{type:Number,default:3}   //note 3 is default because 3 is if of superUser juffler 
 })
 // submitting schema into modal of posts collection of moviesPost database
 const newMoviePost = mongoose.model('post', moviePost);
@@ -207,12 +208,11 @@ App.get("/",async(req,res)=>{
 
 // Creating posts 
 App.post('/create/:key', async (req, res) => {
-	try {
+	// try {
 		data = req.body
-		
 		if(req.params.key === auth.key){
-			nextExistance = await newMoviePost.find({"next":data.next}).exec()
-			previousExistance = await newMoviePost({"previous":data.previous}).exec()
+			nextExistance = await newMoviePost.findOne({"next":data.next}).exec()
+			previousExistance = await newMoviePost.findOne({"previous":data.previous}).exec()
 			if(nextExistance){
 				return res.json({"status":false,"description":`Next Id is already set for movie named: ${nextExistance.name}`})
 			}else if(previousExistance){
@@ -230,7 +230,10 @@ App.post('/create/:key', async (req, res) => {
 				  	next:data.next,
 				  	previous:data.previous,
 				  	isSeries:data.isSeries,
-				  	skip:data.skip
+				  	skip:data.skip,
+				  	owner:data.owner
+
+
 				  })
 					newPost.save((err, doc)=>{
 					  	if(!err){
@@ -251,7 +254,8 @@ App.post('/create/:key', async (req, res) => {
 				  	next:data.next,
 				  	previous:data.previous,
 				  	isSeries:data.isSeries,
-				  	skip:data.skip
+				  	skip:data.skip,
+				  	owner:data.owner
 				  })
 					newPost.save((err, doc)=>{
 					  	if(!err){
@@ -267,11 +271,11 @@ App.post('/create/:key', async (req, res) => {
 		}else{
 			return res.json({"status":false,"description":"you must pass key as a parameter"})
 		}
-	} catch(e) {
+	// } catch(e) {
 		
-		console.log(e);
-		return res.json({"status":false,"description":"Your request method is wrong read docs"})
-	}
+	// 	console.log(e);
+	// 	return res.json({"status":false,"description":"Your request method is wrong read docs"})
+	// }
   
 })
 // reading posts 
