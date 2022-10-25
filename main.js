@@ -283,9 +283,44 @@ App.get('/getOwnerMovies/:key',async(req,res)=>{
 		if(req.params.key === auth.key){
 			const data = req.query
 			if(data.owner){
-				ownerMovies = await newMoviePost.find({"owner":data.owner}).exec()
+				ownerMovies = await newMoviePost.find({"owner":data.owner}).sort({_id:-1}).exec()
 				simplifiedMoviesList = JSON.parse(JSON.stringify(ownerMovies))
-				return res.json({"status":true,"data":simplifiedMoviesList})
+				// setting default value of Movies list 
+				MoviesList = simplifiedMoviesList
+				// if user requesting for data after a specific index in that case 
+				if(data.afterIndex){
+					MoviesList = simplifiedMoviesList.filter(element=>{
+						if(simplifiedMoviesList.indexOf(element) >data.afterIndex){
+							return true
+						}else{
+							return false
+						}
+					})
+				}
+				// if user request for data before specific index 
+				if(data.beforeIndex){
+					// and after index is also mentioned 
+					if(data.afterIndex){
+						MoviesList = MoviesList.filter(element=>{
+							if(simplifiedMoviesList.indexOf(element) < data.beforeIndex){
+								return true
+							}else{
+								return false
+							}
+						})
+					}else{
+						MoviesList = simplifiedMoviesList.filter(element=>{
+							if(simplifiedMoviesList.indexOf(element) < data.beforeIndex){
+								return true
+							}else{
+								return false
+							}
+						})
+					}
+				}
+				// if User need all data after and before is defigned 
+				return res.json({"status":true,"data":MoviesList})
+				// return res.json({"status":true,"data":simplifiedMoviesList})
 			}else{
 				return res.json({"status":false,"description":"Owner id is not provided"})
 			}
