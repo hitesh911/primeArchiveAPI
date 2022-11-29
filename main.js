@@ -68,7 +68,7 @@ App.post("/savePayment",async(req,res)=>{
 			existance = await newPrimeUser.findOne({"email":data.email}).exec()
 			if(!existance){
 				const newPaidUser = newPrimeUser({
-					email:data.email,
+					email:data.email.lower(),
 					deviceID:data.deviceID,
 					wishList:data.wishList,
 					amount:data.amount,
