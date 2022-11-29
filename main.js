@@ -72,7 +72,7 @@ App.post("/savePayment",async(req,res)=>{
 					deviceID:data.deviceID,
 					wishList:data.wishList,
 					amount:data.amount,
-					expireAt:moment().add(30,"days")
+					expireAt:moment().add(3,"days")
 				})
 				newPaidUser.save((err,doc)=>{
 					if(!err){
