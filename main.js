@@ -96,7 +96,7 @@ App.post("/savePayment",async(req,res)=>{
 
 			}
 		}else{
-			console.log(`Status for ${data.email} is ${data.status}`)
+			console.log(`payment not recieved for ${data.email}`)
 			return res.json({"status":false})
 		}
 	
