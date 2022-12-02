@@ -72,7 +72,7 @@ App.post("/savePayment",async(req,res)=>{
 					deviceID:data.deviceID,
 					wishList:data.wishList,
 					amount:data.amount,
-					expireAt:moment().add(4,"days")
+					expireAt:moment().add(9,"days")
 				})
 				newPaidUser.save((err,doc)=>{
 					if(!err){
@@ -84,7 +84,7 @@ App.post("/savePayment",async(req,res)=>{
 					}
 				})
 			}else{
-					newPrimeUser.updateOne({_id:existance._id},{"expireAt":moment(existance.expireAt).add(0,"days"),"amount":existance.amount+20},(err,data)=>{
+					newPrimeUser.updateOne({_id:existance._id},{"expireAt":moment(existance.expireAt).add(9,"days"),"amount":existance.amount+20},(err,data)=>{
 					if(!err){
 						console.log(`More 30 days has been added to ${existance.email} email address`)
 						return res.json({"status":true})
