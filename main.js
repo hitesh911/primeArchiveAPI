@@ -428,35 +428,45 @@ App.post("/checkApi", async (req, res) => {
 		if (!existance) {
 			return res.json({
 				"status": 0,
-				"description": "user is not primuim"
+				"description": "user has no account"
 			})
 		} else {
-			if (existance.deviceId == "" || existance.deviceId == data.deviceId) {
-				newPrimeUser.updateOne({
-					_id: existance._id
-				}, {
-					"deviceId": data.deviceId
-				}, (err, data) => {
-					if (!err) {
-						console.log(`User ${existance.email} is logged in`)
-						return res.json({
-							"status": 1,
-							"description": "device id is added successFully or same as previously"
-						})
-					} else {
-						console.log(`Database error to update deviceId for ${existance.email} address`)
-						return res.json({
-							"status": 4,
-							"description": "Database error to update deviceId"
-						})
-					}
-				})
-			} else {
-				console.log(`DeviceId already exists which is different for ${existance.email}`)
+			if(remainingDays(existance.expireAt) == 0){
+				// resetting deviceid
+				existance.deviceid = ""
 				return res.json({
-					"status": 2,
-					"description": `DeviceId already exists which is different for ${existance.email}`
-				})
+							"status": 3,
+							"expireAt":moment(existance.expireAt).format("DD/MM/YYYY")
+							"description": "Subscription has been expired"
+						})
+			}else{
+				if (existance.deviceId == "" || existance.deviceId == data.deviceId) {
+					newPrimeUser.updateOne({
+						_id: existance._id
+					}, {
+						"deviceId": data.deviceId
+					}, (err, data) => {
+						if (!err) {
+							console.log(`User ${existance.email} is logged in`)
+							return res.json({
+								"status": 1,
+								"description": "device id is added successFully or same as previously"
+							})
+						} else {
+							console.log(`Database error to update deviceId for ${existance.email} address`)
+							return res.json({
+								"status": 4,
+								"description": "Database error to update deviceId"
+							})
+						}
+					})
+				} else {
+					console.log(`DeviceId already exists which is different for ${existance.email}`)
+					return res.json({
+						"status": 2,
+						"description": `DeviceId already exists which is different for ${existance.email}`
+					})
+				}
 			}
 		}
 
