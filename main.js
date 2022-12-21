@@ -436,7 +436,7 @@ App.post("/checkApi", async (req, res) => {
 				existance.deviceid = ""
 				return res.json({
 							"status": 3,
-							"expireAt":moment(existance.expireAt).format("DD/MM/YYYY")
+							"expireAt":moment(existance.expireAt).format("DD/MM/YYYY"),
 							"description": "Subscription has been expired"
 						})
 			}else{
