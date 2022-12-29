@@ -2,7 +2,7 @@
 const path = require("path")
 const nodemailer = require("nodemailer")
 const auth = require(path.join(__dirname,'/credentials/auth'))
-const webimages = require(path.join(__dirname,'/assets/webimages.json'))
+
 
 // main function
 function sendMail(to,subject,html,attachments,callback){
@@ -36,22 +36,79 @@ function sendMail(to,subject,html,attachments,callback){
 }
 // helpers functions 
 // template to make success mail
-function defaultTemplate(name,email,header,footer){
-	return `
-		Hi ${name}\n\n<p style="color:black;">${header}</p>
-		<div  style="width:100%;height:7rem;background-color: lightgray;border-radius: 5px;display:flex;">
-			<span style="width:20%;height:100%;display:flex;align-item:center;margin:0.8rem;">
-				<img src="${webimages.contactUs}" style="width:100%;height:70%;">
-			</span>
-			<div  style="margin-top:0.2rem;margin-right:auto;width:80%;height:100%;">
-				<p style="color:black;display:block">Contact us to resolve your queries or problem regard to you premium subscription.</p>
-				<div style="padding:.2rem;display:inline;">
-					<a target="_blank" style=" background-color: lightgray;color: dodgerblue;border:solid dodgerblue 2px;padding: 5px 8px;border-radius:3px;" href="${auth.googleContactusForm}">Get start</a>  
-				</div>
-			</div>
+// function defaultTemplate(subject,name,email,header,footer){
+// 	return `
+// 		Hi ${name}\n\n<p style="color:black;">${header}</p>
+// 		<div  style="width:100%;height:7rem;background-color: lightgray;border-radius: 5px;display:flex;">
+// 			<span style="width:20%;height:100%;display:flex;align-item:center;margin:0.8rem;">
+// 				<img src="${webimages.contactUs}" style="width:100%;height:70%;">
+// 			</span>
+// 			<div  style="margin-top:0.2rem;margin-right:auto;width:80%;height:100%;">
+// 				<p style="color:black;display:block">Contact us to resolve your queries or problem regard to you premium subscription.</p>
+// 				<div style="padding:.2rem;display:inline;">
+// 					<a target="_blank" style=" background-color: lightgray;color: dodgerblue;border:solid dodgerblue 2px;padding: 5px 8px;border-radius:3px;" href="${auth.googleContactusForm}">Get start</a>  
+// 				</div>
+// 			</div>
 
-		</div>
-		<p style="color:black;">${footer}</p>
+// 		</div>
+// 		<p style="color:black;">${footer}</p>
+// 	`
+// }
+
+function defaultTemplate(subject,name,email,header,footer){
+	return `
+		 <table style="margin: auto;font-family: Arial;max-width:600px" >
+    	<tr>
+    		<th>
+    			<img src="${auth.currentDomain}/logo.jpg" width="80%" height="300" style="border-radius:3px;border-bottom:6px solid  lightgray;display:block;margin:auto; ">	
+    			<span width="80%" style="border-bottom:2px solid #ff3332;display:block;width:80%;margin:auto;border-radious:20rem;"></span>
+    			
+    		</th>
+    	</tr>
+    	<tr>
+    		<td>
+    			<table  style="margin:auto;">
+    				<tr height="80">
+    					<th>${subject}</th>
+    				</tr>
+    				<tr>
+    					<td  align="center" style="color:#808080;">${header}</td>
+    				</tr>
+    				<tr>
+    					<td height="60">
+    								<a href="${auth.googleContactusForm}" style="width:5rem;margin:auto;display:block;padding: 0.6rem;border-radius: 8px;border: none;background-color: lightgray;    text-decoration:none;color: black;">Contact Us</a>
+    					</td>
+    				</tr>
+    			</table>
+    		</td>
+    	</tr>
+    	<tr>
+    		<td height="30"></td>
+    	</tr>
+    	<tr>
+    		<td bgcolor="lightgray" >
+    			<table style="margin:auto;border-top: 2px solid #ff3332;">
+    				<tr>
+    					<th height="100">Team PrimeArchive</th> 
+    				</tr>
+    				<tr>
+    					<td align="center" style="padding:0 2rem;font-size:0.875em;">This message was sent to ${email} because you created new account in PrimeArchive.It will only appear again when you buy or upgrade your subscription next. click to unsubscripe <a style="text-decoration: none" href="#">here</a>
+    					</td>
+    				</tr>
+    				<tr>
+    					<td align="center">
+    						<a href="${auth.facebookProfileLink}"><img width="100" heght="100" src="${auth.currentDomain}/facebook.png"></a>
+    						<a href="${auth.instagramProfileLink}"><img width="100" heght="100" src="${auth.currentDomain}/instagram.png"></a>
+    						<a href="${auth.telegramProfileLink}"><img width="100" heght="100" src="${auth.currentDomain}/telegram.png"></a>
+    						<a href="${auth.twitterProfileLink}"><img width="100" heght="100" src="${auth.currentDomain}/twitter.png"></a>
+    						<a href="${auth.youtubeProfileLink}"><img width="100" heght="100" src="${auth.currentDomain}/youtube.png"></a>
+    					</td>
+    				</tr>
+    			</table>
+
+    		</td>
+    	</tr>
+    </table>
 	`
 }
 // templates component generator

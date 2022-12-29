@@ -25,6 +25,26 @@ const {
 	newPrimeUser
 } = require(path.join(__dirname, '/schema.js'))
 const subscriptionModle = require(path.join(__dirname, '/credentials/subscriptionModle'))
+
+
+// connection to data base 
+async function connection() {
+	await mongoose.connect(auth.DATABASEURI)
+}
+connection().catch(err => console.log(`Hey JUFFLER this is database connectin error :${err}`))
+
+// specific variables 
+const App = express()
+const port = process.env.PORT || 3000
+
+
+// ------------------------------Some middlewares ----------------------
+// urlencoder is for using req.body parameter 
+App.use(express.urlencoded({
+	extended: false
+}))
+App.use(express.json())
+App.use(express.static("assets"))
 // utility function 
 function getSubscriptionPlane(amount, email) {
 	for (let [payedAmount, days] of Object.entries(subscriptionModle)) {
@@ -48,25 +68,6 @@ function remainingDays(date) {
 }
 // end utility functions 
 
-// connection to data base 
-async function connection() {
-	await mongoose.connect(auth.DATABASEURI)
-}
-connection().catch(err => console.log(`Hey JUFFLER this is database connectin error :${err}`))
-
-// specific variables 
-const App = express()
-const port = process.env.PORT || 3000
-
-
-// Some middlewares 
-// urlencoder is for using req.body parameter 
-App.use(express.urlencoded({
-	extended: false
-}))
-App.use(express.json())
-
-
 //------------------------- primeUser API Routs webhook----------------------------------
 // create user and save payment is same 
 App.post("/savePayment/:key", async (req, res) => {
@@ -84,7 +85,7 @@ App.post("/savePayment/:key", async (req, res) => {
 				}).exec()
 				if (transactionAlreadyExists) {
 					// sending mail to user (customer)
-					sendMail(data.email, "Payment is received but (Account not created)", html = defaultTemplate(name=data.email.split("@")[0], email=data.email,header=generateHeader(subject="TECHNICAL_ISSUE",data.email),footer="We are sorry for this unconvenience"))
+					sendMail(data.email, "Payment is received but (Account not created)", html = defaultTemplate(subject="Payment is received but (Account not created)",name=data.email.split("@")[0], email=data.email,header=generateHeader(subject="TECHNICAL_ISSUE",data.email),footer="We are sorry for this unconvenience"))
 					// sending mail to primeArchive owner 
 					sendMail(auth.superMail, "receive existing TransactionId", html = `Payment is recived for ${data.email} but account is not create because transactionId already exists in database please make Full api request using endpoint : /savePayment with proper parameters`)
 					console.log(`payment received but transactionid already exists email is : ${data.email.toLowerCase()}`)
@@ -130,7 +131,7 @@ App.post("/savePayment/:key", async (req, res) => {
 											// sending invoice email to user 
 											sendMail(to = doc.email,
 												subject = "Account created successFully",
-												html = defaultTemplate(name=doc.email.split("@")[0], email=doc.email,header=generateHeader("ACCOUNT_CREATED",doc.email),footer="Download invoice below to see your transaction detials"),
+												html = defaultTemplate(subject="Account created successFully",name=doc.email.split("@")[0], email=doc.email,header=generateHeader("ACCOUNT_CREATED",doc.email),footer="Download invoice below to see your transaction detials"),
 
 												attachments = [{
 													filename: "invoice.pdf",
@@ -147,7 +148,7 @@ App.post("/savePayment/:key", async (req, res) => {
 											// sending invoice copy to our supermail address 
 											sendMail(to = auth.superMail,
 												subject = "Notify new account",
-												html = defaultTemplate(name="Owner",email=doc.email,header=generateHeader("ACCOUNT_CREATED",doc.email),footer="Download invoice below to see your transaction detials"),
+												html = defaultTemplate(subject="Notify new account",name="Owner",email=doc.email,header=generateHeader("ACCOUNT_CREATED",doc.email),footer="Download invoice below to see your transaction detials"),
 
 												attachments = [{
 													filename: "invoice.pdf",
@@ -217,7 +218,7 @@ App.post("/savePayment/:key", async (req, res) => {
 											// sending invoice email to user 
 											sendMail(to = existance.email,
 												subject = "Subscription upgraded successFully",
-												html = defaultTemplate(name=existance.email.split("@")[0],email=existance.email,header=generateHeader(subject="SUBSCRIPTION_UPGRADED",email=existance.email,extras={"planeDays":planeDays}),footer="Download invoice below to see your transaction detials"),
+												html = defaultTemplate(subject="Subscription upgraded successFully",name=existance.email.split("@")[0],email=existance.email,header=generateHeader(subject="SUBSCRIPTION_UPGRADED",email=existance.email,extras={"planeDays":planeDays}),footer="Download invoice below to see your transaction detials"),
 												attachments = [{
 													filename: "invoice.pdf",
 													path: pdf
@@ -233,7 +234,7 @@ App.post("/savePayment/:key", async (req, res) => {
 											// sending invoice copy to our supermail address 
 											sendMail(to = auth.superMail,
 												subject = "Notify subscription upgraded",
-												html = defaultTemplate(name="Owner",email=existance.email,header=generateHeader("SUBSCRIPTION_UPGRADED",existance.email,extras={planeDays}),footer="Download invoice below to see your transaction detials"),
+												html = defaultTemplate(subject="Notify subscription upgraded",name="Owner",email=existance.email,header=generateHeader("SUBSCRIPTION_UPGRADED",existance.email,extras={planeDays}),footer="Download invoice below to see your transaction detials"),
 												attachments = [{
 													filename: "invoice.pdf",
 													path: pdf
@@ -272,7 +273,7 @@ App.post("/savePayment/:key", async (req, res) => {
 					}else {
 						// if plane is not avalable 
 						// notify user that he/she tooks non existing subscription plane 
-						sendMail(data.email, "Plane does not exists", html = defaultTemplate(name=data.email.split('@')[0],email=data.email,header=generateHeader(subject="PLANE_NOT_EXISTS",data.email),footer="Sorry for unconvenience"))
+						sendMail(data.email, "Plane does not exists", html = defaultTemplate(subject="Plane does not exists",name=data.email.split('@')[0],email=data.email,header=generateHeader(subject="PLANE_NOT_EXISTS",data.email),footer="Sorry for unconvenience"))
 						// notify admin of prime archive 
 						sendMail(auth.superMail, "Unknown amount payed", html = `Somehow user with email ${data.email} have bought non existing subscription plane check Contact us form for more info`)
 						console.log(`user with email: ${data.email.toLowerCase()} exedienty bought non-existing subscription`)
