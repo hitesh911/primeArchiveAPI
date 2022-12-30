@@ -76,7 +76,7 @@ function defaultTemplate(subject,name,email,header,footer){
     				</tr>
     				<tr>
     					<td height="60">
-    								<a href="${auth.googleContactusForm}" style="width:5rem;margin:auto;display:block;padding: 0.6rem;border-radius: 8px;border: none;background-color: #e8e8e8;    text-decoration:none;color: black;">Contact Us</a>
+    								<a href="${auth.googleContactusForm}" style="margin:auto;display:block;padding: 0.6rem;border-radius: 8px;border: none;background-color: #e8e8e8;    text-decoration:none;color: black;">Contact Us</a>
     					</td>
     				</tr>
     			</table>
