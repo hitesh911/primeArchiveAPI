@@ -39,14 +39,14 @@ function sendMail(to,subject,html,attachments,callback){
 // function defaultTemplate(subject,name,email,header,footer){
 // 	return `
 // 		Hi ${name}\n\n<p style="color:black;">${header}</p>
-// 		<div  style="width:100%;height:7rem;background-color: lightgray;border-radius: 5px;display:flex;">
+// 		<div  style="width:100%;height:7rem;background-color: #e8e8e8;border-radius: 5px;display:flex;">
 // 			<span style="width:20%;height:100%;display:flex;align-item:center;margin:0.8rem;">
 // 				<img src="${webimages.contactUs}" style="width:100%;height:70%;">
 // 			</span>
 // 			<div  style="margin-top:0.2rem;margin-right:auto;width:80%;height:100%;">
 // 				<p style="color:black;display:block">Contact us to resolve your queries or problem regard to you premium subscription.</p>
 // 				<div style="padding:.2rem;display:inline;">
-// 					<a target="_blank" style=" background-color: lightgray;color: dodgerblue;border:solid dodgerblue 2px;padding: 5px 8px;border-radius:3px;" href="${auth.googleContactusForm}">Get start</a>  
+// 					<a target="_blank" style=" background-color: #e8e8e8;color: dodgerblue;border:solid dodgerblue 2px;padding: 5px 8px;border-radius:3px;" href="${auth.googleContactusForm}">Get start</a>  
 // 				</div>
 // 			</div>
 
@@ -60,7 +60,7 @@ function defaultTemplate(subject,name,email,header,footer){
 		 <table style="margin: auto;font-family: Arial;max-width:600px" >
     	<tr>
     		<th>
-    			<img src="${auth.currentDomain}/logo.jpg" width="80%" height="300" style="border-radius:3px;border-bottom:6px solid  lightgray;display:block;margin:auto; ">	
+    			<img src="${auth.currentDomain}/logo.jpg" width="80%" height="300" style="border-radius:3px;border-bottom:6px solid  #e8e8e8;display:block;margin:auto; ">	
     			<span width="80%" style="border-bottom:2px solid #ff3332;display:block;width:80%;margin:auto;border-radious:20rem;"></span>
     			
     		</th>
@@ -76,7 +76,7 @@ function defaultTemplate(subject,name,email,header,footer){
     				</tr>
     				<tr>
     					<td height="60">
-    								<a href="${auth.googleContactusForm}" style="width:5rem;margin:auto;display:block;padding: 0.6rem;border-radius: 8px;border: none;background-color: lightgray;    text-decoration:none;color: black;">Contact Us</a>
+    								<a href="${auth.googleContactusForm}" style="width:5rem;margin:auto;display:block;padding: 0.6rem;border-radius: 8px;border: none;background-color: #e8e8e8;    text-decoration:none;color: black;">Contact Us</a>
     					</td>
     				</tr>
     			</table>
@@ -86,7 +86,7 @@ function defaultTemplate(subject,name,email,header,footer){
     		<td height="30"></td>
     	</tr>
     	<tr>
-    		<td bgcolor="lightgray" >
+    		<td bgcolor="#e8e8e8" >
     			<table style="margin:auto;border-top: 2px solid #ff3332;">
     				<tr>
     					<th height="100">Team PrimeArchive</th> 
