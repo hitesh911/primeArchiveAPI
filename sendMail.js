@@ -35,25 +35,6 @@ function sendMail(to,subject,html,attachments,callback){
 
 }
 // helpers functions 
-// template to make success mail
-// function defaultTemplate(subject,name,email,header,footer){
-// 	return `
-// 		Hi ${name}\n\n<p style="color:black;">${header}</p>
-// 		<div  style="width:100%;height:7rem;background-color: #e8e8e8;border-radius: 5px;display:flex;">
-// 			<span style="width:20%;height:100%;display:flex;align-item:center;margin:0.8rem;">
-// 				<img src="${webimages.contactUs}" style="width:100%;height:70%;">
-// 			</span>
-// 			<div  style="margin-top:0.2rem;margin-right:auto;width:80%;height:100%;">
-// 				<p style="color:black;display:block">Contact us to resolve your queries or problem regard to you premium subscription.</p>
-// 				<div style="padding:.2rem;display:inline;">
-// 					<a target="_blank" style=" background-color: #e8e8e8;color: dodgerblue;border:solid dodgerblue 2px;padding: 5px 8px;border-radius:3px;" href="${auth.googleContactusForm}">Get start</a>  
-// 				</div>
-// 			</div>
-
-// 		</div>
-// 		<p style="color:black;">${footer}</p>
-// 	`
-// }
 
 function defaultTemplate(subject,name,email,header,footer){
 	return `
@@ -92,7 +73,7 @@ function defaultTemplate(subject,name,email,header,footer){
     					<th height="100">Team PrimeArchive</th> 
     				</tr>
     				<tr>
-    					<td align="center" style="padding:0 2rem;font-size:0.875em;">This message was sent to ${email} because you created new account in PrimeArchive.It will only appear again when you buy or upgrade your subscription next. click to unsubscripe <a style="text-decoration: none" href="#">here</a>
+    					<td align="center" style="padding:0 2rem;font-size:0.875em;">This message was sent to ${email} because you created new account in PrimeArchive.It will only appear again when you buy or upgrade your subscription next. click <a style="text-decoration: none" href="#">here</a> to unsubscripe 
     					</td>
     				</tr>
     				<tr>
