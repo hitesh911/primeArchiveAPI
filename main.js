@@ -79,7 +79,7 @@ App.post("/savePayment/:key", async (req, res) => {
 				transactionAlreadyExists = await newPrimeUser.findOne({
 					transactionDetails: {
 						$elemMatch: {
-							transactionId: data.transactionId
+							transactionId: data.txnid
 						}
 					}
 				}).exec()
@@ -105,7 +105,7 @@ App.post("/savePayment/:key", async (req, res) => {
 									"paymentId": data.mihpayid,
 								}, //this payment id provided by payu to track transactions 
 								transactionDetails: {
-									"transactionId": data.transactionId,
+									"transactionId": data.txnid,
 									"transactionDate": moment().format("DD/MM/YYYY HH:mm"),
 									"transactionAmount": data.amount,
 									"subscription": [moment().format("DD/MM/YYYY"), moment().add(planeDays, "days").format("DD/MM/YYYY")]
@@ -121,9 +121,9 @@ App.post("/savePayment/:key", async (req, res) => {
 									console.log("new  PrimeUser listed successFully ", doc)
 									// generating invoice 
 									identifier = {
-										"transactionId": data.transactionId
+										"transactionId": data.txnid
 									}
-									createInvoice(identifier, fileName = data.transactionId, async (problem, pdf) => {
+									createInvoice(identifier, fileName = data.txnid, async (problem, pdf) => {
 										if (problem) {
 											sendMail(auth.superMail, "Application error", problem)
 											console.log(problem)
@@ -196,7 +196,7 @@ App.post("/savePayment/:key", async (req, res) => {
 										"paymentId": data.mihpayid,
 									},
 									transactionDetails: {
-										"transactionId": data.transactionId,
+										"transactionId": data.txnid,
 										"transactionDate": moment().format("DD/MM/YYYY HH:mm"),
 										"transactionAmount": data.amount,
 										"subscription": [moment().add(remainingDays(existance.expireAt),"days").format("DD/MM/YYYY"), moment().add(remainingDays(existance.expireAt)+planeDays,"days").format("DD/MM/YYYY")]
@@ -208,9 +208,9 @@ App.post("/savePayment/:key", async (req, res) => {
 										console.log(`More ${planeDays} days has been added to ${existance.email} email address`)
 										// generating invoice 
 									identifier = {
-										"transactionId": data.transactionId
+										"transactionId": data.txnid
 									}
-									createInvoice(identifier, fileName = data.transactionId, (problem, pdf) => {
+									createInvoice(identifier, fileName = data.txnid, (problem, pdf) => {
 										if (problem) {
 											sendMail(auth.superMail, "Application error", problem)
 											console.log(problem)
@@ -310,10 +310,10 @@ App.get("/getInvoice/:key",async (req,res)=>{
 			data = req.query
 			if(data.transactionId){
 				identifier = {
-					"transactionId":data.transactionId
+					"transactionId":data.txnid
 				}
 				createInvoice(identifier,
-					data.transactionId,
+					data.txnid,
 					(problem,pdf)=>{
 						if(problem){
 							return res.json({"status":false,"description":problem})
