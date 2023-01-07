@@ -83,11 +83,11 @@ App.post("/savePayment/:key", async (req, res) => {
 						}
 					}
 				}).exec()
-				if (transactionAlreadyExists) {
+				if (transactionAlreadyExists or null) {
 					// sending mail to user (customer)
-					sendMail(data.email, "Payment is received but (Account not created)", html = defaultTemplate(subject="Payment is received but (Account not created)",name=data.email.split("@")[0], email=data.email,header=generateHeader(subject="TECHNICAL_ISSUE",data.email),footer="We are sorry for this unconvenience"))
+					sendMail(data.email, "Payment is received but Account status not updated ", html = defaultTemplate(subject="Payment is received but Account status not updated",name=data.email.split("@")[0], email=data.email,header=generateHeader(subject="TECHNICAL_ISSUE",data.email),footer="We are sorry for this unconvenience"))
 					// sending mail to primeArchive owner 
-					sendMail(auth.superMail, "receive existing TransactionId", html = `Payment is recived for ${data.email} but account is not create because transactionId already exists in database please make Full api request using endpoint : /savePayment with proper parameters`)
+					sendMail(auth.superMail, "receive existing TransactionId", html = `Payment is received for ${data.email} but account status has not been  update because transactionId already exists in database please make Full api request using endpoint : /savePayment with proper parameters`)
 					console.log(`payment received but transactionid already exists email is : ${data.email.toLowerCase()}`)
 					return res.json({
 						"status": false
