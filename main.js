@@ -83,7 +83,7 @@ App.post("/savePayment/:key", async (req, res) => {
 						}
 					}
 				}).exec()
-				if (transactionAlreadyExists || null) {
+				if (transactionAlreadyExists || data.txnid == null) {
 					// sending mail to user (customer)
 					sendMail(data.email, "Payment is received but Account status not updated ", html = defaultTemplate(subject="Payment is received but Account status not updated",name=data.email.split("@")[0], email=data.email,header=generateHeader(subject="TECHNICAL_ISSUE",data.email),footer="We are sorry for this unconvenience"))
 					// sending mail to primeArchive owner 
