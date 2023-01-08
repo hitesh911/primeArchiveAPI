@@ -77,7 +77,7 @@ function defaultTemplate(subject,name,email,header,footer){
     					</td>
     				</tr>
     				<tr>
-    					<td align="center" style="display:flex;justify-content:space-around;">
+    					<td align="center" style="display:flex;justify-content:space-around;flex-wrap:wrap;">
     						<a href="${auth.facebookProfileLink}"><img width="80" height="80" src="${auth.currentDomain}/facebook.png"></a>
     						<a href="${auth.instagramProfileLink}"><img width="80" height="80" src="${auth.currentDomain}/instagram.png"></a>
     						<a href="${auth.telegramProfileLink}"><img width="80" height="80" src="${auth.currentDomain}/telegram.png"></a>
