@@ -78,11 +78,11 @@ function defaultTemplate(subject,name,email,header,footer){
     				</tr>
     				<tr>
     					<td align="center" style="display:flex;justify-content:space-around;flex-wrap:wrap;">
-    						<a href="${auth.facebookProfileLink}"><img width="80" height="80" src="${auth.currentDomain}/facebook.png"></a>
-    						<a href="${auth.instagramProfileLink}"><img width="80" height="80" src="${auth.currentDomain}/instagram.png"></a>
-    						<a href="${auth.telegramProfileLink}"><img width="80" height="80" src="${auth.currentDomain}/telegram.png"></a>
-    						<a href="${auth.twitterProfileLink}"><img width="80" height="80" src="${auth.currentDomain}/twitter.png"></a>
-    						<a href="${auth.youtubeProfileLink}"><img width="80" height="80" src="${auth.currentDomain}/youtube.png"></a>
+    						<a href="${auth.facebookProfileLink}"><img width="80" height="80" src="https://${auth.currentDomain}/facebook.png"></a>
+    						<a href="${auth.instagramProfileLink}"><img width="80" height="80" src="https://${auth.currentDomain}/instagram.png"></a>
+    						<a href="${auth.telegramProfileLink}"><img width="80" height="80" src="https://${auth.currentDomain}/telegram.png"></a>
+    						<a href="${auth.twitterProfileLink}"><img width="80" height="80" src="https://${auth.currentDomain}/twitter.png"></a>
+    						<a href="${auth.youtubeProfileLink}"><img width="80" height="80" src="https://${auth.currentDomain}/youtube.png"></a>
     					</td>
     				</tr>
     			</table>
