@@ -41,7 +41,7 @@ function defaultTemplate(subject,name,email,header,footer){
 		 <table style="margin: auto;font-family: Arial;max-width:600px" >
     	<tr>
     		<th>
-    			<img src="${auth.currentDomain}/logo.jpg" width="70%" height="300" style="border-radius:3px;border-bottom:6px solid  #e8e8e8;display:block;margin:auto; ">	
+    			<img src="https://${auth.currentDomain}/logo.jpg" width="70%" height="300" style="border-radius:3px;border-bottom:6px solid  #e8e8e8;display:block;margin:auto; ">	
     			<span style="border-bottom:2px solid #ff3332;display:block;width:69%;margin:auto;border-radious:20rem;"></span>
     			
     		</th>
