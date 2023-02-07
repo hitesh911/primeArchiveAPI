@@ -20,7 +20,7 @@ function generateHr(doc, y) {
 
 // main page design  functions 
 function generateHeader(doc) {
-	doc.image('./assets/logo.jpg', 50, 45, { width: 50 })
+	doc.image("./assets/logo.jpg", 50, 45, { width: 50 })
 		.fillColor('#444444')
 		.fontSize(20)
 		.text('PrimeArchive.', 110, 57)

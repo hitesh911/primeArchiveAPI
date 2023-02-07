@@ -41,7 +41,7 @@ function defaultTemplate(subject,name,email,header,footer){
 		 <table style="margin: auto;font-family: Arial;max-width:600px" >
     	<tr>
     		<th>
-    			<img src="${auth.currentDomain}/logo.jpg" width="70%" height="300" style="border-radius:3px;border-bottom:6px solid  #e8e8e8;display:block;margin:auto; ">	
+    			<img src="https://${auth.currentDomain}/logo.jpg" width="70%" height="300" style="border-radius:3px;border-bottom:6px solid  #e8e8e8;display:block;margin:auto; ">	
     			<span style="border-bottom:2px solid #ff3332;display:block;width:69%;margin:auto;border-radious:20rem;"></span>
     			
     		</th>
@@ -78,11 +78,11 @@ function defaultTemplate(subject,name,email,header,footer){
     				</tr>
     				<tr>
     					<td align="center" style="display:flex;justify-content:space-around;flex-wrap:wrap;">
-    						<a href="${auth.facebookProfileLink}"><img width="80" height="80" src="${auth.currentDomain}/facebook.png"></a>
-    						<a href="${auth.instagramProfileLink}"><img width="80" height="80" src="${auth.currentDomain}/instagram.png"></a>
-    						<a href="${auth.telegramProfileLink}"><img width="80" height="80" src="${auth.currentDomain}/telegram.png"></a>
-    						<a href="${auth.twitterProfileLink}"><img width="80" height="80" src="${auth.currentDomain}/twitter.png"></a>
-    						<a href="${auth.youtubeProfileLink}"><img width="80" height="80" src="${auth.currentDomain}/youtube.png"></a>
+    						<a href="${auth.facebookProfileLink}"><img width="80" height="80" src="https://${auth.currentDomain}/facebook.png"></a>
+    						<a href="${auth.instagramProfileLink}"><img width="80" height="80" src="https://${auth.currentDomain}/instagram.png"></a>
+    						<a href="${auth.telegramProfileLink}"><img width="80" height="80" src="https://${auth.currentDomain}/telegram.png"></a>
+    						<a href="${auth.twitterProfileLink}"><img width="80" height="80" src="https://${auth.currentDomain}/twitter.png"></a>
+    						<a href="${auth.youtubeProfileLink}"><img width="80" height="80" src="https://${auth.currentDomain}/youtube.png"></a>
     					</td>
     				</tr>
     			</table>
