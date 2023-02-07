@@ -4,18 +4,15 @@ const moment = require("moment")
 // --------------------------------------- SCHEMA SECTION -----------------------------------
 // creating schema for movie post
 const moviePost =  new Schema({
-	type: String,
-	name: String,
-	size: String,
-	image: String,
-	caption: String,
-	movieID:String,
-	releaseDate:{type:Date,default:Date.now},
-	next:String,
-	previous:String,
-	isSeries:{type:Boolean,default:false},
-	skip:{type:[String],default:[]},
+	imdbID:String,
+	fileID:String,
 	owner:{type:Number,default:3}   //note 3 is default because 3 is the id of superUser "juffler"
+})
+const seriesPost = new Schema({
+	imdbID:String,
+	episodesImdbIds:{type:[String],default:[]},
+	filesID:{type:[String],default:[]},
+	owner:{type:Number,default:3}
 })
 // submitting schema into modal of posts collection of moviesPost database
 const newMoviePost = mongoose.model('post', moviePost);
