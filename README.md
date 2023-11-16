@@ -46,15 +46,10 @@ The PrimeArchive API server is a Node.js application built using the Express.js 
 - Endpoints are accessible for payment processing, invoice retrieval, user account management, and system health check.
 - Authentication keys are used to secure sensitive operations.
 
-**Notes:**
-
-- Ensure that the MongoDB database is properly configured and accessible.
-- Regularly monitor server logs for any issues or errors.
-- This documentation provides a high-level overview, and detailed API documentation should be maintained for developers.
 
 **Disclaimer:**
-This project description is based on the provided code snippet, and additional details or features may exist outside the provided context.
+ TPlease note that this project was personal and now public for others to learn. In future code may not work.
 
---- 
 
-Please note that this project was personal and now public for others to learn. In future code may not work.
+
+
