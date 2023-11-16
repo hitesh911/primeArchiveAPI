@@ -48,7 +48,7 @@ The PrimeArchive API server is a Node.js application built using the Express.js 
 
 
 **Disclaimer:**
- TPlease note that this project was personal and now public for others to learn. In future code may not work.
+ Please note that this project was personal and now public for others to learn. In future code may not work.
 
 
 
